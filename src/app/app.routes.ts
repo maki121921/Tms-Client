@@ -8,6 +8,23 @@ export const routes: Routes = [
       import("./features/student-dashboard/student-dashboard.component")
         .then((m) => m.StudentDashboardComponent),
   },
+
+  {
+  path: 'dashboard',
+  loadComponent: () =>
+  import('./features/instructor-dashboard/instructor-dashboard')
+  .then(m => m.InstructorDashboard)
+},
+
+{
+path: 'enrollments',
+loadComponent: () =>
+import('./features/enrollment-list/enrollment-list')
+.then(m => m.EnrollmentListComponent)
+},
+{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+// ... your existing routes (enrollment-list, etc.)
+{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: "courses/:id",
     loadComponent: () =>
