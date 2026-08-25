@@ -59,4 +59,7 @@ export class EnrollmentListComponent {
     // Load enrollment data.
     this.store.loadEnrollments();
   }
+  approve(id: number) {
+  this.store.approveEnrollment((id));
+}
 }

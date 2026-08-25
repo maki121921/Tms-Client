@@ -89,7 +89,7 @@ export const EnrollmentStore = signalStore(
     ),
 
     // Optimistic approval
-    approveEnrollment: rxMethod<string>(
+    approveEnrollment: rxMethod<number>(
       pipe(
 
         // Step 1: Update UI immediately

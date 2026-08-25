@@ -27,12 +27,15 @@
 </ng-container>
 <!-- Actions Column-->
 <ng-container matColumnDef="actions">
-<th mat-header-cell *matHeaderCellDef>Actions</th>
-<td mat-cell *matCellDef="let row">
-@if (row.status === 'Pending') {
-<button (click)="store.approveEnrollment(row.id)">Approve</button>
-}
-</td>
+  <th mat-header-cell *matHeaderCellDef>Actions</th>
+
+  <td mat-cell *matCellDef="let row">
+
+    <button (click)="approve(row.id)">
+      Approve
+    </button>
+
+  </td>
 </ng-container>
 <!-- Row definitions-->
 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
