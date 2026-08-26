@@ -31,6 +31,13 @@ import('./features/enrollment-list/enrollment-list')
       import("./features/course-detail/course-detail")
         .then((m) => m.CourseDetail),
   },
+
+  {
+  path: 'grade-submission',
+  loadComponent: () =>
+    import('./features/grade-submission/grade-submission.component')
+      .then(m => m.GradeSubmissionComponent)
+},
   {
 path: 'enroll',
 loadComponent: () => import('./features/enrollment-form/enrollment-form')

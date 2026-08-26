@@ -19,27 +19,26 @@ import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import {
   pipe,
   concatMap,
+  switchMap,
   tap,
   catchError,
   EMPTY
 } from 'rxjs';
 
 import { EnrollmentService } from '../services/enrollment';
+import { LiveSyncService } from '../services/live-sync';
 import { Enrollment } from '../models/enrollment.model';
 
 export const EnrollmentStore = signalStore(
   { providedIn: 'root' },
 
-  // Simple state properties
   withState({
     isLoading: false,
     error: null as string | null
   }),
 
-  // Centralized enrollment collection
   withEntities<Enrollment>(),
 
-  // Derived state
   withComputed((store) => ({
     pendingCount: computed(
       () =>
@@ -49,8 +48,32 @@ export const EnrollmentStore = signalStore(
     )
   })),
 
-  // Store methods
-  withMethods((store, api = inject(EnrollmentService)) => ({
+  withMethods((
+    store,
+    api = inject(EnrollmentService),
+    sync = inject(LiveSyncService)
+  ) => ({
+
+    // Listen for real-time SignalR enrollment updates
+    listenForLiveUpdates: rxMethod<void>(
+      pipe(
+        tap(() => sync.connect()),
+
+        switchMap(() => sync.events$),
+
+        tap(event => {
+          patchState(
+            store,
+            updateEntity({
+              id: Number(event.id),
+              changes: {
+                status: event.status
+              }
+            })
+          );
+        })
+      )
+    ),
 
     // Load all enrollments
     loadEnrollments: rxMethod<void>(
@@ -92,7 +115,6 @@ export const EnrollmentStore = signalStore(
     approveEnrollment: rxMethod<number>(
       pipe(
 
-        // Step 1: Update UI immediately
         tap(id => {
           patchState(
             store,
@@ -105,11 +127,9 @@ export const EnrollmentStore = signalStore(
           );
         }),
 
-        // Step 2: Send request to API
         concatMap(id =>
           api.approve(id).pipe(
 
-            // Step 3: Roll back if server rejects
             catchError(err => {
 
               patchState(
