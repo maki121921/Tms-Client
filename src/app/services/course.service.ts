@@ -1,6 +1,8 @@
 import { Injectable, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { map } from "rxjs/operators";
+import { environment } from "../../environments/environment";
+
 import {
   Course,
   CourseDetail,
@@ -11,9 +13,8 @@ import {
   providedIn: "root",
 })
 export class CourseService {
-  private http = inject(HttpClient);
-
-  private baseUrl = "http://localhost:5221/api/courses";
+  private readonly http = inject(HttpClient);
+  private readonly baseUrl = `${environment.apiUrl}/courses`;
 
   getAll(page = 1, pageSize = 50) {
     return this.http
@@ -29,4 +30,7 @@ export class CourseService {
   getById(id: string) {
     return this.http.get<CourseDetail>(`${this.baseUrl}/${id}`);
   }
+  delete(id: number) {
+  return this.http.delete<void>(`${this.baseUrl}/${id}`);
+}
 }

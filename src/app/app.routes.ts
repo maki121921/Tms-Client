@@ -1,7 +1,6 @@
 import { Routes } from "@angular/router";
 
 export const routes: Routes = [
-
   {
     path: "dashboard",
     loadComponent: () =>
@@ -10,21 +9,19 @@ export const routes: Routes = [
   },
 
   {
-  path: 'dashboard',
-  loadComponent: () =>
-  import('./features/instructor-dashboard/instructor-dashboard')
-  .then(m => m.InstructorDashboard)
-},
+    path: "instructor-dashboard",
+    loadComponent: () =>
+      import("./features/instructor-dashboard/instructor-dashboard")
+        .then((m) => m.InstructorDashboard),
+  },
 
-{
-path: 'enrollments',
-loadComponent: () =>
-import('./features/enrollment-list/enrollment-list')
-.then(m => m.EnrollmentListComponent)
-},
-{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-// ... your existing routes (enrollment-list, etc.)
-{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+  {
+    path: "enrollments",
+    loadComponent: () =>
+      import("./features/enrollment-list/enrollment-list")
+        .then((m) => m.EnrollmentListComponent),
+  },
+
   {
     path: "courses/:id",
     loadComponent: () =>
@@ -33,16 +30,19 @@ import('./features/enrollment-list/enrollment-list')
   },
 
   {
-  path: 'grade-submission',
-  loadComponent: () =>
-    import('./features/grade-submission/grade-submission.component')
-      .then(m => m.GradeSubmissionComponent)
-},
+    path: "grade-submission",
+    loadComponent: () =>
+      import("./features/grade-submission/grade-submission.component")
+        .then((m) => m.GradeSubmissionComponent),
+  },
+
   {
-path: 'enroll',
-loadComponent: () => import('./features/enrollment-form/enrollment-form')
-.then(m => m.EnrollmentForm)
-},
+    path: "enroll",
+    loadComponent: () =>
+      import("./features/enrollment-form/enrollment-form")
+        .then((m) => m.EnrollmentForm),
+  },
+
   {
     path: "",
     redirectTo: "dashboard",
