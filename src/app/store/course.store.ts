@@ -9,14 +9,13 @@ import {
 
 import {
   withEntities,
-  setAllEntities,
-  removeEntity
+  removeEntity,
+  setAllEntities
 } from '@ngrx/signals/entities';
 
 import {
   catchError,
-  EMPTY,
-  tap
+  EMPTY
 } from 'rxjs';
 
 import { CourseService } from '../services/course.service';
@@ -26,83 +25,40 @@ export const CourseStore = signalStore(
   { providedIn: 'root' },
 
   withState({
-    isLoading: false,
     error: null as string | null
   }),
 
   withEntities<Course>(),
 
-  withMethods((
-    store,
-    svc = inject(CourseService)
-  ) => ({
-
-    loadCourses() {
-      patchState(store, {
-        isLoading: true,
-        error: null
-      });
-
-      svc.getAll().pipe(
-
-        tap(courses => {
-          patchState(
-            store,
-            setAllEntities(courses),
-            {
-              isLoading: false
-            }
-          );
-        }),
-
-        catchError(err => {
-          patchState(store, {
-            isLoading: false,
-            error: err.error?.detail ??
-              'Unable to load courses.'
-          });
-
-          return EMPTY;
-        })
-      ).subscribe();
-    },
+  withMethods((store, svc = inject(CourseService)) => ({
 
     deleteCourse(id: number) {
 
-      // 1. IMPORTANT: snapshot BEFORE modifying the store
+      // 1. Take snapshot of current entities BEFORE mutating
       const previousSnapshot = store.entities();
 
-      // 2. Remove immediately from UI
+      // 2. Instant visual feedback
       patchState(
         store,
         removeEntity(id)
       );
 
-      // 3. Tell the backend
+      // 3. Dispatch API call
       svc.delete(id).pipe(
-
-        tap(() => {
-          // Delete succeeded.
-          // Nothing else is necessary because
-          // the entity was already removed optimistically.
-          patchState(store, {
-            error: null
-          });
-        }),
 
         catchError(err => {
 
-          // 4. Backend rejected deletion.
-          // Restore the exact previous state.
+          // 4. Server rejected request
+          // Restore previous snapshot
           patchState(
             store,
             setAllEntities(previousSnapshot)
           );
 
+          // Set error message
           patchState(store, {
             error:
-              err.error?.detail ??
-              'Cannot delete course.'
+              'Cannot delete course: active student enrollments exist.'
           });
 
           return EMPTY;
