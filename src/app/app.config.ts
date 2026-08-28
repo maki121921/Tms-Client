@@ -18,6 +18,7 @@ import { routes } from "./app.routes";
 
 import { credentialsInterceptor } from "./interceptors/credentials.interceptor";
 import { errorInterceptor } from './interceptors/error.interceptor';
+import { jwtInterceptor } from './interceptors/jwt.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -30,7 +31,8 @@ export const appConfig: ApplicationConfig = {
 
     provideHttpClient(
       withInterceptors([
-        credentialsInterceptor, 
+        credentialsInterceptor,
+        jwtInterceptor,
         errorInterceptor
       ]),
 

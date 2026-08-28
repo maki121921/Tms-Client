@@ -1,4 +1,5 @@
 import { Routes } from "@angular/router";
+import { roleGuard } from "./guards/role.guard";
 
 export const routes: Routes = [
   {
@@ -41,6 +42,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import("./features/enrollment-form/enrollment-form")
         .then((m) => m.EnrollmentForm),
+  },
+
+  {
+    path: "admin/courses",
+    loadComponent: () =>
+      import("./features/admin-course-list/admin-course-list")
+        .then((m) => m.AdminCourseList),
+    canActivate: [roleGuard("Admin")],
   },
 
   {
