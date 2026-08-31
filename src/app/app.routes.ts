@@ -51,6 +51,12 @@ export const routes: Routes = [
         .then((m) => m.AdminCourseList),
     canActivate: [roleGuard("Admin")],
   },
+  {
+  path: "unauthorized",
+  loadComponent: () =>
+    import("./features/unauthorized/unauthorized")
+      .then((m) => m.Unauthorized),
+},
 
   {
     path: "",
