@@ -53,6 +53,16 @@ export const EnrollmentStore = signalStore(
     api = inject(EnrollmentService),
     sync = inject(LiveSyncService)
   ) => ({
+    seed: (rows: Enrollment[]) => {
+  patchState(
+    store,
+    setAllEntities(rows),
+    {
+      isLoading: false,
+      error: null
+    }
+  );
+},
 
     // Listen for real-time SignalR enrollment updates
     listenForLiveUpdates: rxMethod<void>(
