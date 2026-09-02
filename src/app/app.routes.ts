@@ -57,6 +57,13 @@ export const routes: Routes = [
     import("./features/unauthorized/unauthorized")
       .then((m) => m.Unauthorized),
 },
+  
+  {
+  path: "login",
+  loadComponent: () =>
+    import("./features/login/login")
+      .then((m) => m.LoginComponent),
+},
 
   {
     path: "",

@@ -1,0 +1,40 @@
+<div class="login-container">
+  <h1>Sign In</h1>
+
+  <form (ngSubmit)="signIn()">
+    <div>
+      <label for="email">Email</label>
+      <input
+        id="email"
+        name="email"
+        type="email"
+        [(ngModel)]="email"
+        autocomplete="username"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="password">Password</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        [(ngModel)]="password"
+        autocomplete="current-password"
+        required
+      />
+    </div>
+
+    @if (errorMessage) {
+      <p role="alert">{{ errorMessage }}</p>
+    }
+
+    <button
+      type="submit"
+      [disabled]="isSubmitting"
+    >
+      {{ isSubmitting ? "Signing In..." : "Sign In" }}
+    </button>
+  </form>
+</div>
