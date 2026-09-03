@@ -1,8 +1,8 @@
-import { test as setup } from "@playwright/test";
+import { test as setup, expect } from "@playwright/test";
 
 setup("authenticate as admin", async ({ page }) => {
-  const email = process.env.TMS_ADMIN_EMAIL;
-  const password = process.env.TMS_ADMIN_PASSWORD;
+  const email = process.env["TMS_ADMIN_EMAIL"];
+  const password = process.env["TMS_ADMIN_PASSWORD"];
 
   if (!email || !password) {
     throw new Error("Missing TMS_ADMIN_EMAIL or TMS_ADMIN_PASSWORD in .env");
@@ -41,9 +41,23 @@ setup("authenticate as admin", async ({ page }) => {
 
   await page.getByRole("button", { name: "Sign In" }).click();
 
-  await page.waitForTimeout(3000);
+  // Wait for successful navigation instead of relying only on a timeout
+  await expect(page).toHaveURL(/instructor-dashboard/, {
+    timeout: 10000,
+  });
+  await expect(
+  page.getByText(/Instructor Command Center/i)
+).toBeVisible();
 
   console.log("AFTER LOGIN URL:", page.url());
+
   console.log("PAGE CONTENT:");
   console.log(await page.locator("body").innerText());
+
+  // IMPORTANT: save authenticated browser state
+  await page.context().storageState({
+    path: "playwright/.auth/admin.json",
+  });
+
+  console.log("AUTH STATE SAVED: playwright/.auth/admin.json");
 });
